@@ -22,6 +22,7 @@ use std::io;
 use std::sync::mpsc::TryRecvError;
 use std::thread::{Builder, JoinHandle};
 use std::time::{Duration, Instant};
+use std::fmt::Debug;
 
 #[cfg(feature = "native-tls")]
 use crate::stream::HandshakeStream;
@@ -54,6 +55,7 @@ enum IoLoopMessage {
     SetPubConfirmHandler(Option<CrossbeamSender<Confirm>>),
 }
 
+#[derive(Debug)]
 enum ChannelMessage {
     Method(AMQPClass),
     ConsumeOk(String, CrossbeamReceiver<ConsumerMessage>),

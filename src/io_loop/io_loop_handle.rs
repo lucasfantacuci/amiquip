@@ -104,9 +104,20 @@ impl IoLoopHandle {
 
     fn call_message<T: TryFromAmqpClass>(&mut self, message: IoLoopMessage) -> Result<T> {
         self.send(message)?;
-        match self.recv()? {
-            ChannelMessage::Method(method) => T::try_from(method),
-            ChannelMessage::ConsumeOk(_, _) | ChannelMessage::GetOk(_) => FrameUnexpected.fail(),
+        let rcv = self.recv()?;
+        println!("rcv -> {:?}", rcv);
+        match rcv {
+            ChannelMessage::Method(method) => { 
+                T::try_from(method) 
+            },
+            ChannelMessage::ConsumeOk(s, t) => {
+                println!("Consumi Okay -> s - {:?}, t - {:?}", s, t);
+                FrameUnexpected.fail()
+            },
+            ChannelMessage::GetOk(f) => {
+                println!("gét okay -> f - {:?}", f);
+                FrameUnexpected.fail()
+            }
         }
     }
 

@@ -694,7 +694,7 @@ impl Channel {
             delivery_tag: delivery.delivery_tag(),
             multiple,
         });
-        self.call::<_, _>(ack)
+        self.call::<_, ExchangeUnbindOk>(ack).map(|_ok| ())
     }
 
     /// Asynchronously reject all messages consumers on this channel have received that have
@@ -719,7 +719,7 @@ impl Channel {
             multiple,
             requeue,
         });
-        self.call::<_, _>(nack)
+        self.call::<_, ExchangeUnbindOk>(nack).map(|_ok| ())
     }
 
     pub(crate) fn basic_reject(&self, delivery: Delivery, requeue: bool) -> Result<()> {
