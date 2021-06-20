@@ -690,7 +690,7 @@ impl Channel {
     }
 
     pub(crate) fn basic_ack(&self, delivery: Delivery, multiple: bool) -> Result<()> {
-        self.call_nowait(AmqpBasic::Ack(Ack {
+        self.call(AmqpBasic::Ack(Ack {
             delivery_tag: delivery.delivery_tag(),
             multiple,
         }))
@@ -713,7 +713,7 @@ impl Channel {
         multiple: bool,
         requeue: bool,
     ) -> Result<()> {
-        self.call_nowait(AmqpBasic::Nack(Nack {
+        self.call(AmqpBasic::Nack(Nack {
             delivery_tag: delivery.delivery_tag(),
             multiple,
             requeue,
