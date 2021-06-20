@@ -690,10 +690,11 @@ impl Channel {
     }
 
     pub(crate) fn basic_ack(&self, delivery: Delivery, multiple: bool) -> Result<()> {
-        self.call(AmqpBasic::Ack(Ack {
+        let ack = AmqpBasic::Ack(Ack {
             delivery_tag: delivery.delivery_tag(),
             multiple,
-        }))
+        });
+        self.call::<_, _>(ack)
     }
 
     /// Asynchronously reject all messages consumers on this channel have received that have
@@ -713,11 +714,12 @@ impl Channel {
         multiple: bool,
         requeue: bool,
     ) -> Result<()> {
-        self.call(AmqpBasic::Nack(Nack {
+        let nack = AmqpBasic::Nack(Nack {
             delivery_tag: delivery.delivery_tag(),
             multiple,
             requeue,
-        }))
+        });
+        self.call::<_, _>(nack)
     }
 
     pub(crate) fn basic_reject(&self, delivery: Delivery, requeue: bool) -> Result<()> {
